@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiongcp.bug.manager.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="com.xiongcp.bug.manager.entity.User">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="pswd" property="pswd" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="BIGINT"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.xiongcp.bug.manager.entity.User" extends="BaseResultMap">
+        <result column="icon" property="icon" jdbcType="LONGVARBINARY"/>
+    </resultMap>
+    <update id="updateLoginTime">
+        UPDATE u_user
+        <set>
+            <if test="date!=null">
+                u_user.last_login_time = #{date}
+            </if>
+        </set>
+        WHERE id = #{userId}
+    </update>
+    <select id="selectAllUser" resultType="com.xiongcp.bug.manager.entity.User">
+    SELECT * FROM u_user WHERE create_time &lt; #{date}
+  </select>
+    <select id="findByName" resultType="com.xiongcp.bug.manager.entity.User"></select>
+    <select id="findUserByEmailAndPassWord" resultType="com.xiongcp.bug.manager.entity.User">
+    SELECT * FROM u_user WHERE  email = #{email} AND pswd = #{password}
+  </select>
+    <select id="findUserExitByEmailAndPassWord" resultType="java.lang.Integer">
+        SELECT COUNT FROM u_user WHERE  email = #{email} AND pswd = #{password}
+    </select>
+
+</mapper>
